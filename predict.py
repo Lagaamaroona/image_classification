@@ -111,7 +111,7 @@ def imshow(image, ax=None, title=None):
 
 
 
-def predict(image_path, model, topk, gpu):
+def predict(image_path, model, topk, label, gpu):
     ''' Predict the class (or classes) of an image using a trained deep learning model.
     '''
     print("Predicting.......")
@@ -129,7 +129,11 @@ def predict(image_path, model, topk, gpu):
         score = model(output)
         topResults = torch.topk(score, topk)
     
-    return topResults
+    prob, classes = topResults
+
+    cat_to_name = label_mapping(label)
+    names = match(cat_to_name, classes)
+    result(names, prob[0], output)
 
 
 
@@ -190,13 +194,13 @@ if __name__ == "__main__":
     output, img_pil = load_image(args.image)
      
     # predict
-    prob, classes = predict(img_pil, model, args.topk, args.gpu)
+    predict(img_pil, model, args.topk, args.label, args.gpu)
 
-    # label mapping
-    cat_to_name = label_mapping(args.label)
+    # # label mapping
+    # cat_to_name = label_mapping(args.label)
 
-    # match index with category name
-    names = match(cat_to_name, classes)
+    # # match index with category name
+    # names = match(cat_to_name, classes)
 
-    # result
-    result(names, prob[0], output)
+    # # result
+    # result(names, prob[0], output)

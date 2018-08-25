@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>Image Classifier Project_part1_final_20180821</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>Image Classifier Project</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 <style type="text/css">
@@ -11793,7 +11793,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Imports here</span>
@@ -11812,6 +11812,7 @@ div#notebook {
 <span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">BytesIO</span>
 <span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
 </pre></div>
 
 </div>
@@ -11855,6 +11856,8 @@ div#notebook {
 <span class="n">transforms_training</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">Compose</span><span class="p">([</span>
                                           <span class="n">transforms</span><span class="o">.</span><span class="n">RandomRotation</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span>
                                           <span class="n">transforms</span><span class="o">.</span><span class="n">RandomResizedCrop</span><span class="p">(</span><span class="mi">224</span><span class="p">),</span>
+                                          <span class="n">transforms</span><span class="o">.</span><span class="n">RandomVerticalFlip</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.2</span><span class="p">),</span>
+                                          <span class="n">transforms</span><span class="o">.</span><span class="n">RandomHorizontalFlip</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="mf">0.2</span><span class="p">),</span>
                                           <span class="n">transforms</span><span class="o">.</span><span class="n">ToTensor</span><span class="p">(),</span>
                                           <span class="n">transforms</span><span class="o">.</span><span class="n">Normalize</span><span class="p">((</span><span class="mf">0.485</span><span class="p">,</span> <span class="mf">0.456</span><span class="p">,</span> <span class="mf">0.406</span><span class="p">),</span>
                                                                <span class="p">(</span><span class="mf">0.229</span><span class="p">,</span> <span class="mf">0.224</span><span class="p">,</span> <span class="mf">0.225</span><span class="p">))</span>
@@ -11907,7 +11910,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;cat_to_name.json&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -11940,7 +11943,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">validation</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dataloader_validation</span><span class="p">,</span> <span class="n">criterion</span><span class="p">):</span>
@@ -11971,13 +11974,17 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Download predefined model</span>
+<span class="n">arch</span> <span class="o">=</span> <span class="s1">&#39;vgg16&#39;</span>
 
-<span class="c1"># Download predefined model</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">vgg16</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">arch</span><span class="o">==</span><span class="s1">&#39;vgg16&#39;</span><span class="p">:</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">vgg16</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">arch</span><span class="o">==</span><span class="s1">&#39;vgg19&#39;</span><span class="p">:</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">vgg19</span><span class="p">(</span><span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
 <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
     <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
     
@@ -12026,14 +12033,14 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>Downloading: &#34;https://download.pytorch.org/models/vgg16-397923af.pth&#34; to /root/.torch/models/vgg16-397923af.pth
-100%|██████████| 553433881/553433881 [00:07&lt;00:00, 75076999.66it/s] 
+100%|██████████| 553433881/553433881 [00:13&lt;00:00, 42520131.40it/s]
 </pre>
 </div>
 </div>
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[7]:</div>
+<div class="prompt output_prompt">Out[6]:</div>
 
 
 
@@ -12093,7 +12100,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">EPOCHS</span><span class="p">):</span>
@@ -12150,6 +12157,103 @@ div#notebook {
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Epoch:1/20  Training Loss: 4.239  Training Accu: 11.000%  Validation Loss: 3.100  Validation Accu: 33.000%
+Epoch:1/20  Training Loss: 3.017  Training Accu: 30.000%  Validation Loss: 1.992  Validation Accu: 47.000%
+Epoch:1/20  Training Loss: 2.343  Training Accu: 40.000%  Validation Loss: 1.364  Validation Accu: 61.000%
+Total time spent in this epoch to train the model: 3.157779933333333 mins
+Epoch:2/20  Training Loss: 1.816  Training Accu: 51.000%  Validation Loss: 1.054  Validation Accu: 69.000%
+Epoch:2/20  Training Loss: 1.694  Training Accu: 54.000%  Validation Loss: 0.823  Validation Accu: 75.000%
+Epoch:2/20  Training Loss: 1.604  Training Accu: 56.000%  Validation Loss: 0.799  Validation Accu: 75.000%
+Total time spent in this epoch to train the model: 3.18919195 mins
+Epoch:3/20  Training Loss: 1.424  Training Accu: 60.000%  Validation Loss: 0.734  Validation Accu: 78.000%
+Epoch:3/20  Training Loss: 1.493  Training Accu: 59.000%  Validation Loss: 0.671  Validation Accu: 79.000%
+Epoch:3/20  Training Loss: 1.365  Training Accu: 62.000%  Validation Loss: 0.693  Validation Accu: 79.000%
+Total time spent in this epoch to train the model: 3.1682645333333337 mins
+Epoch:4/20  Training Loss: 1.210  Training Accu: 65.000%  Validation Loss: 0.593  Validation Accu: 81.000%
+Epoch:4/20  Training Loss: 1.219  Training Accu: 66.000%  Validation Loss: 0.537  Validation Accu: 83.000%
+Epoch:4/20  Training Loss: 1.277  Training Accu: 64.000%  Validation Loss: 0.540  Validation Accu: 84.000%
+Total time spent in this epoch to train the model: 3.1764656833333333 mins
+Epoch:5/20  Training Loss: 1.193  Training Accu: 66.000%  Validation Loss: 0.536  Validation Accu: 83.000%
+Epoch:5/20  Training Loss: 1.164  Training Accu: 68.000%  Validation Loss: 0.489  Validation Accu: 85.000%
+Epoch:5/20  Training Loss: 1.212  Training Accu: 66.000%  Validation Loss: 0.488  Validation Accu: 86.000%
+Total time spent in this epoch to train the model: 3.1797305166666665 mins
+Epoch:6/20  Training Loss: 1.193  Training Accu: 67.000%  Validation Loss: 0.518  Validation Accu: 83.000%
+Epoch:6/20  Training Loss: 1.091  Training Accu: 70.000%  Validation Loss: 0.508  Validation Accu: 85.000%
+Epoch:6/20  Training Loss: 1.133  Training Accu: 69.000%  Validation Loss: 0.496  Validation Accu: 85.000%
+Total time spent in this epoch to train the model: 3.1796752333333336 mins
+Epoch:7/20  Training Loss: 1.040  Training Accu: 71.000%  Validation Loss: 0.489  Validation Accu: 85.000%
+Epoch:7/20  Training Loss: 1.104  Training Accu: 69.000%  Validation Loss: 0.487  Validation Accu: 86.000%
+Epoch:7/20  Training Loss: 1.068  Training Accu: 70.000%  Validation Loss: 0.465  Validation Accu: 86.000%
+Total time spent in this epoch to train the model: 3.1757739000000003 mins
+Epoch:8/20  Training Loss: 1.014  Training Accu: 71.000%  Validation Loss: 0.457  Validation Accu: 86.000%
+Epoch:8/20  Training Loss: 0.983  Training Accu: 71.000%  Validation Loss: 0.401  Validation Accu: 87.000%
+Epoch:8/20  Training Loss: 1.022  Training Accu: 70.000%  Validation Loss: 0.440  Validation Accu: 87.000%
+Total time spent in this epoch to train the model: 3.1706409 mins
+Epoch:9/20  Training Loss: 1.007  Training Accu: 72.000%  Validation Loss: 0.439  Validation Accu: 86.000%
+Epoch:9/20  Training Loss: 1.019  Training Accu: 72.000%  Validation Loss: 0.477  Validation Accu: 85.000%
+Epoch:9/20  Training Loss: 1.007  Training Accu: 71.000%  Validation Loss: 0.425  Validation Accu: 86.000%
+Total time spent in this epoch to train the model: 3.1982214499999997 mins
+Epoch:10/20  Training Loss: 0.964  Training Accu: 73.000%  Validation Loss: 0.441  Validation Accu: 87.000%
+Epoch:10/20  Training Loss: 0.982  Training Accu: 72.000%  Validation Loss: 0.447  Validation Accu: 85.000%
+Epoch:10/20  Training Loss: 0.987  Training Accu: 72.000%  Validation Loss: 0.436  Validation Accu: 86.000%
+Total time spent in this epoch to train the model: 3.2093516500000003 mins
+Epoch:11/20  Training Loss: 0.889  Training Accu: 74.000%  Validation Loss: 0.427  Validation Accu: 87.000%
+Epoch:11/20  Training Loss: 0.968  Training Accu: 72.000%  Validation Loss: 0.426  Validation Accu: 87.000%
+Epoch:11/20  Training Loss: 0.941  Training Accu: 74.000%  Validation Loss: 0.440  Validation Accu: 86.000%
+Total time spent in this epoch to train the model: 3.19433925 mins
+Epoch:12/20  Training Loss: 0.892  Training Accu: 75.000%  Validation Loss: 0.390  Validation Accu: 88.000%
+Epoch:12/20  Training Loss: 0.965  Training Accu: 75.000%  Validation Loss: 0.417  Validation Accu: 88.000%
+Epoch:12/20  Training Loss: 0.888  Training Accu: 76.000%  Validation Loss: 0.422  Validation Accu: 87.000%
+Total time spent in this epoch to train the model: 3.1714403 mins
+Epoch:13/20  Training Loss: 0.971  Training Accu: 73.000%  Validation Loss: 0.415  Validation Accu: 86.000%
+Epoch:13/20  Training Loss: 0.957  Training Accu: 74.000%  Validation Loss: 0.385  Validation Accu: 88.000%
+Epoch:13/20  Training Loss: 0.921  Training Accu: 74.000%  Validation Loss: 0.399  Validation Accu: 87.000%
+Total time spent in this epoch to train the model: 3.1765441666666665 mins
+Epoch:14/20  Training Loss: 0.792  Training Accu: 77.000%  Validation Loss: 0.400  Validation Accu: 87.000%
+Epoch:14/20  Training Loss: 0.874  Training Accu: 76.000%  Validation Loss: 0.401  Validation Accu: 87.000%
+Epoch:14/20  Training Loss: 0.908  Training Accu: 75.000%  Validation Loss: 0.362  Validation Accu: 88.000%
+Total time spent in this epoch to train the model: 3.1745439666666666 mins
+Epoch:15/20  Training Loss: 0.877  Training Accu: 75.000%  Validation Loss: 0.400  Validation Accu: 87.000%
+Epoch:15/20  Training Loss: 0.865  Training Accu: 74.000%  Validation Loss: 0.394  Validation Accu: 88.000%
+Epoch:15/20  Training Loss: 0.885  Training Accu: 76.000%  Validation Loss: 0.397  Validation Accu: 87.000%
+Total time spent in this epoch to train the model: 3.1685155333333332 mins
+Epoch:16/20  Training Loss: 0.900  Training Accu: 75.000%  Validation Loss: 0.439  Validation Accu: 86.000%
+Epoch:16/20  Training Loss: 0.835  Training Accu: 77.000%  Validation Loss: 0.438  Validation Accu: 87.000%
+Epoch:16/20  Training Loss: 0.857  Training Accu: 77.000%  Validation Loss: 0.448  Validation Accu: 86.000%
+Total time spent in this epoch to train the model: 3.1712279166666666 mins
+Epoch:17/20  Training Loss: 0.819  Training Accu: 76.000%  Validation Loss: 0.395  Validation Accu: 89.000%
+Epoch:17/20  Training Loss: 0.860  Training Accu: 76.000%  Validation Loss: 0.423  Validation Accu: 87.000%
+Epoch:17/20  Training Loss: 0.857  Training Accu: 76.000%  Validation Loss: 0.363  Validation Accu: 89.000%
+Total time spent in this epoch to train the model: 3.1667023999999997 mins
+Epoch:18/20  Training Loss: 0.837  Training Accu: 76.000%  Validation Loss: 0.418  Validation Accu: 88.000%
+Epoch:18/20  Training Loss: 0.875  Training Accu: 75.000%  Validation Loss: 0.408  Validation Accu: 88.000%
+Epoch:18/20  Training Loss: 0.798  Training Accu: 78.000%  Validation Loss: 0.390  Validation Accu: 88.000%
+Total time spent in this epoch to train the model: 3.1663299833333336 mins
+Epoch:19/20  Training Loss: 0.744  Training Accu: 79.000%  Validation Loss: 0.385  Validation Accu: 88.000%
+Epoch:19/20  Training Loss: 0.797  Training Accu: 77.000%  Validation Loss: 0.408  Validation Accu: 87.000%
+Epoch:19/20  Training Loss: 0.867  Training Accu: 75.000%  Validation Loss: 0.332  Validation Accu: 89.000%
+Total time spent in this epoch to train the model: 3.1746226833333333 mins
+Epoch:20/20  Training Loss: 0.838  Training Accu: 76.000%  Validation Loss: 0.352  Validation Accu: 89.000%
+Epoch:20/20  Training Loss: 0.803  Training Accu: 77.000%  Validation Loss: 0.350  Validation Accu: 90.000%
+Epoch:20/20  Training Loss: 0.917  Training Accu: 75.000%  Validation Loss: 0.363  Validation Accu: 89.000%
+Total time spent in this epoch to train the model: 3.17264305 mins
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -12165,9 +12269,7 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">datetime</span>
-
-<span class="k">def</span> <span class="nf">testing</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dataloader_testing</span><span class="p">,</span> <span class="n">criterion</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">testing</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dataloader_testing</span><span class="p">,</span> <span class="n">criterion</span><span class="p">):</span>
     <span class="n">testing_correct</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">testing_loss</span> <span class="o">=</span> <span class="mi">0</span>
     
@@ -12214,8 +12316,8 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Total time spent to test the model: 0.3177515 mins
-Testing Loss: 4.626  Testing Accu: 0.000%
+<pre>Total time spent to test the model: 0.3061207833333333 mins
+Testing Loss: 0.446  Testing Accu: 87.000%
 </pre>
 </div>
 </div>
@@ -12237,16 +12339,23 @@ Testing Loss: 4.626  Testing Accu: 0.000%
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Save the checkpoint </span>
+<span class="n">training_batch</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">validation_testing_batch</span> <span class="o">=</span> <span class="mi">32</span>
 <span class="n">savedata</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;model_state&#39;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
             <span class="s1">&#39;criterion_state&#39;</span><span class="p">:</span> <span class="n">criterion</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
             <span class="s1">&#39;optimizer_state&#39;</span><span class="p">:</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
+            <span class="s1">&#39;classifier&#39;</span><span class="p">:</span> <span class="n">classifier</span><span class="p">,</span>
             <span class="s1">&#39;class_to_idx&#39;</span><span class="p">:</span> <span class="n">dataset_training</span><span class="o">.</span><span class="n">class_to_idx</span><span class="p">,</span>
-            <span class="s1">&#39;epoch&#39;</span><span class="p">:</span> <span class="n">EPOCHS</span>
+            <span class="s1">&#39;epochs&#39;</span><span class="p">:</span> <span class="n">EPOCHS</span><span class="p">,</span>
+            <span class="s1">&#39;arch&#39;</span><span class="p">:</span> <span class="n">arch</span><span class="p">,</span>
+            <span class="s1">&#39;lr&#39;</span><span class="p">:</span><span class="n">LR</span><span class="p">,</span>
+            <span class="s1">&#39;training_batch&#39;</span><span class="p">:</span><span class="n">training_batch</span><span class="p">,</span>
+            <span class="s1">&#39;validation_testing_batch&#39;</span><span class="p">:</span><span class="n">validation_testing_batch</span>
            <span class="p">}</span>
 
 <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">savedata</span><span class="p">,</span> <span class="s1">&#39;trained_model.pth&#39;</span><span class="p">)</span>
@@ -12268,17 +12377,28 @@ Testing Loss: 4.626  Testing Accu: 0.000%
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Write a function that loads a checkpoint and rebuilds the model</span>
-<span class="n">loaddata</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;trained_model.pth&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">load_previous_model</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="n">loaddata</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
-<span class="c1">#... (restore model from state)</span>
+    <span class="n">model_fn</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">torchvision</span><span class="o">.</span><span class="n">models</span><span class="p">,</span> <span class="n">loaddata</span><span class="p">[</span><span class="s1">&#39;arch&#39;</span><span class="p">])</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">model_fn</span><span class="p">()</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">classifier</span> <span class="o">=</span> <span class="n">loaddata</span><span class="p">[</span><span class="s1">&#39;classifier&#39;</span><span class="p">]</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">class_to_idx</span> <span class="o">=</span> <span class="n">loaddata</span><span class="p">[</span><span class="s1">&#39;class_to_idx&#39;</span><span class="p">]</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">loaddata</span><span class="p">[</span><span class="s1">&#39;model_state&#39;</span><span class="p">])</span>
+    
+    <span class="n">LR</span> <span class="o">=</span> <span class="n">loaddata</span><span class="p">[</span><span class="s1">&#39;lr&#39;</span><span class="p">]</span>
 
-<span class="n">model</span><span class="o">.</span><span class="n">class_to_idx</span> <span class="o">=</span> <span class="n">loaddata</span><span class="p">[</span><span class="s1">&#39;class_to_idx&#39;</span><span class="p">]</span>
-<span class="n">model</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">loaddata</span><span class="p">[</span><span class="s1">&#39;model_state&#39;</span><span class="p">])</span>
-<span class="n">optimizer</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">loaddata</span><span class="p">[</span><span class="s1">&#39;optimizer_state&#39;</span><span class="p">])</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">classifier</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">LR</span><span class="p">)</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">loaddata</span><span class="p">[</span><span class="s1">&#39;optimizer_state&#39;</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">;</span>
+
+<span class="n">model</span><span class="p">,</span> <span class="n">optimizer</span> <span class="o">=</span> <span class="n">load_previous_model</span><span class="p">(</span><span class="s1">&#39;trained_model.pth&#39;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12309,7 +12429,7 @@ Testing Loss: 4.626  Testing Accu: 0.000%
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">process_image</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
@@ -12362,7 +12482,7 @@ Testing Loss: 4.626  Testing Accu: 0.000%
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">imshow</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -12393,7 +12513,7 @@ Testing Loss: 4.626  Testing Accu: 0.000%
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">img_url</span> <span class="o">=</span> <span class="s2">&quot;https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Sacred_lotus_Nelumbo_nucifera.jpg/981px-Sacred_lotus_Nelumbo_nucifera.jpg&quot;</span>
@@ -12415,7 +12535,7 @@ Testing Loss: 4.626  Testing Accu: 0.000%
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[12]:</div>
+<div class="prompt output_prompt">Out[19]:</div>
 
 
 
@@ -12434,7 +12554,7 @@ Testing Loss: 4.626  Testing Accu: 0.000%
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># process_image function test</span>
@@ -12452,13 +12572,13 @@ Testing Loss: 4.626  Testing Accu: 0.000%
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[13]:</div>
+<div class="prompt output_prompt">Out[20]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fca51084630&gt;</pre>
+<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f4828119a20&gt;</pre>
 </div>
 
 </div>
@@ -12501,14 +12621,13 @@ Testing Loss: 4.626  Testing Accu: 0.000%
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="n">image_path</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">topk</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">image_path</span><span class="p">,</span> <span class="n">topk</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39; Predict the class (or classes) of an image using a trained deep learning model.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     
-    <span class="c1"># TODO: Implement the code to predict the class from an image file</span>
     <span class="n">output</span> <span class="o">=</span> <span class="n">process_image</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
     <span class="n">output</span><span class="o">.</span><span class="n">unsqueeze_</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
@@ -12517,39 +12636,21 @@ Testing Loss: 4.626  Testing Accu: 0.000%
     
     <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
         <span class="n">score</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-        <span class="n">topResults</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="n">topk</span><span class="p">)</span>
+        <span class="n">prob</span><span class="p">,</span> <span class="n">idxs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="n">topk</span><span class="p">)</span>
     
-    <span class="k">return</span> <span class="n">topResults</span>
-</pre></div>
+        <span class="c1"># match flower names with the chosen index</span>
+        <span class="c1"># Original code</span>
+        
+        <span class="n">idxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">idxs</span><span class="p">)</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">idxs</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cat_to_name</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">)])</span>
 
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">prob</span><span class="p">,</span> <span class="n">classes</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span><span class="n">img_pil</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">topk</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># match flower names with the chosen index</span>
-<span class="n">classes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span>
-<span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-    <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cat_to_name</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">)])</span>
+        <span class="c1"># New code</span>
+<span class="c1">#         idx_to_class = {val:key for key, val in model.class_to_idx.items()}</span>
+<span class="c1">#         names = [idx_to_class[idx] for idx in idxs]</span>
+        
+        <span class="k">return</span> <span class="n">prob</span><span class="p">,</span> <span class="n">names</span>
 </pre></div>
 
 </div>
@@ -12570,18 +12671,17 @@ Testing Loss: 4.626  Testing Accu: 0.000%
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># TODO: Display an image along with the top 5 classes</span>
-<span class="n">y_pos</span> <span class="o">=</span> <span class="n">names</span>
-<span class="n">x_pos</span> <span class="o">=</span> <span class="n">prob</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">x_pos</span><span class="p">,</span> <span class="n">y_pos</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">img_pil</span><span class="p">,</span> <span class="n">topk</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
 <span class="n">ax_img</span> <span class="o">=</span> <span class="n">imshow</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-<span class="n">ax_img</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">ax_img</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">y_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y_pos</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x_pos</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y_pos</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y_pos</span><span class="p">)),</span> <span class="n">y_pos</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -12618,7 +12718,7 @@ Testing Loss: 4.626  Testing Accu: 0.000%
 
 
 <div class="output_png output_subarea ">
-<img src="data:image/png;base64,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
+<img src="data:image/png;base64,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
 "
 >
 </div>
